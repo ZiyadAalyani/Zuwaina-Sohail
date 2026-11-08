@@ -54,3 +54,12 @@ If `/api/health` says `DATABASE_URL is missing`, check the variable name and mak
 ## Local website
 
 The included `server.js` still runs the local version on `http://localhost:3000` and saves local submissions to `data.json`. Local JSON data and the hosted Neon database are separate; local submissions are not automatically copied to the hosted database.
+
+
+## 7. If RSVP still returns HTTP 500
+
+1. Visit `https://YOUR-DOMAIN.vercel.app/api/health` first. It must return `database: connected`.
+2. If it reports `DATABASE_URL is missing`, add the Neon connection string under Vercel → Settings → Environment Variables with the exact name `DATABASE_URL`, select Production, save, and redeploy.
+3. If it reports a connection failure, copy a fresh connection string from Neon (prefer the pooled connection string) and replace the value. Do not include quotes or paste the secret into frontend files.
+4. If health is connected but RSVP still fails, open Vercel → Project → Deployments → latest deployment → Functions → `api/rsvp` → Logs. The log now prints the database error message without returning credentials to the browser.
+5. This version also adds missing columns to older `rsvps` and `wishes` tables automatically. It does not delete existing rows.
